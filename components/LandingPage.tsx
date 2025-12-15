@@ -368,4 +368,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               <div className="flex flex-col gap-4 text-sm font-bold text-zinc-500">
                 <a href="#" className="hover:text-emerald-400 transition-colors">Privacy Policy</a>
                 <a href="#" className="hover:text-emerald-400 transition-colors">Terms of Service</a>
-                <a href="#" className="hover
+                <a href="#" className="hover:text-emerald-400 transition-colors">Ethical Guidelines</a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+             <p className="text-zinc-600 text-[10px] font-black uppercase tracking-widest">© 2026 SkillSync AI. All rights reserved.</p>
+             <div className="flex gap-8 text-zinc-600 text-[10px] font-black uppercase tracking-widest">
+                <a href="#" className="hover:text-emerald-400 transition-colors">Twitter</a>
+                <a href="#" className="hover:text-emerald-400 transition-colors">LinkedIn</a>
+                <a href="#" className="hover:text-emerald-400 transition-colors">GitHub</a>
+             </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};

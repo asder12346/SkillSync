@@ -5,7 +5,7 @@
 
 @layer base {
   body {
-    @apply bg-[#050505] text-zinc-100 antialiased;
+    @apply bg-[#050505] text-zinc-100 antialiased overflow-hidden selection:bg-emerald-500 selection:text-zinc-950;
   }
 }
 
@@ -19,20 +19,39 @@
   }
   
   .glass-panel {
-    @apply bg-zinc-900/40 backdrop-blur-xl border border-white/5;
+    @apply bg-zinc-900/50 backdrop-blur-3xl border border-white/10;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-emerald-400 via-emerald-500 to-cyan-500;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
   }
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Custom scrollbar for desktop when needed */
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply w-6 h-6 bg-emerald-500 rounded-full cursor-pointer shadow-lg shadow-emerald-500/40 border-4 border-zinc-950 appearance-none transition-transform active:scale-125;
 }
