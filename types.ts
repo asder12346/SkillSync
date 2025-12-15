@@ -1,37 +1,46 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
 
-export interface Asset {
-  id: string;
-  type: 'logo' | 'product';
+export interface Skill {
   name: string;
-  data: string; // Base64
-  mimeType: string;
+  level: number; // 0-100
+  targetLevel: number;
+  category: 'technical' | 'soft' | 'domain';
 }
 
-export interface PlacedLayer {
-  uid: string; // unique instance id
-  assetId: string;
-  x: number; // percentage 0-100
-  y: number; // percentage 0-100
-  scale: number; // 1 = 100%
-  rotation: number;
-}
-
-export interface GeneratedMockup {
+export interface LearningModule {
   id: string;
-  imageUrl: string;
-  prompt: string;
-  createdAt: number;
-  layers?: PlacedLayer[]; // Store layout used
-  productId?: string;
+  title: string;
+  description: string;
+  duration: string;
+  type: 'course' | 'project' | 'certification';
+  skills: string[];
+  status: 'not_started' | 'in_progress' | 'completed';
+  provider?: string;
 }
 
-export type AppView = 'dashboard' | 'assets' | 'studio' | 'gallery' | 'try-on';
+export interface CareerPathway {
+  id: string;
+  goal: string;
+  marketDemand: 'high' | 'medium' | 'low';
+  estimatedSalary: string;
+  modules: LearningModule[];
+  matchPercentage: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'model';
+  text: string;
+  timestamp: number;
+}
+
+export type AppView = 'dashboard' | 'pathway' | 'skills' | 'coach' | 'market';
 
 export interface LoadingState {
-  isGenerating: boolean;
+  isActive: boolean;
   message: string;
 }
