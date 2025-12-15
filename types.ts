@@ -36,6 +36,7 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: number;
+  isError?: boolean;
 }
 
 export interface UserProfile {
@@ -61,4 +62,5 @@ export type AppView =
 export interface LoadingState {
   isActive: boolean;
   message: string;
+  error?: string | null;
 }

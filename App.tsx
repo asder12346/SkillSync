@@ -11,7 +11,7 @@ import {
   Globe, ArrowRight, ArrowLeft, ChevronRight, GraduationCap,
   Briefcase, Heart, BookOpen, Settings, Layout, Users, Star,
   DollarSign, ShieldCheck, Mail, RefreshCcw, AlertCircle,
-  FileText, Mic, Video, Lightbulb
+  FileText, Mic, Video, Lightbulb, Check, RefreshCw
 } from 'lucide-react';
 import { Button } from './components/Button';
 import { LandingPage } from './components/LandingPage';
@@ -408,7 +408,7 @@ export default function App() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [pathway, setPathway] = useState<CareerPathway | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [loading, setLoading] = useState<LoadingState>({ isActive: false, message: '' });
+  const [loading, setLoading] = useState<LoadingState>({ isActive: false, message: '', error: null });
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -426,18 +426,17 @@ export default function App() {
 
   const handleOnboardingComplete = async (profile: UserProfile) => {
     setUserProfile(profile);
-    setLoading({ isActive: true, message: 'Synchronizing with global job markets...' });
+    setLoading({ isActive: true, message: 'Synchronizing with global job markets...', error: null });
     try {
       const path = await generateCareerPathway(profile.goal, `${profile.currentRole}, ${profile.industry}`);
       const gaps = await analyzeSkillGap([], profile.goal);
       setPathway(path);
       setSkills(gaps);
       setView('dashboard');
-    } catch (e) {
-      console.error(e);
-      setView('dashboard');
-    } finally {
       setLoading({ isActive: false, message: '' });
+    } catch (e: any) {
+      console.error(e);
+      setLoading({ isActive: true, message: '', error: e.message || "Something went wrong while synchronizing. Please try again." });
     }
   };
 
@@ -465,13 +464,14 @@ export default function App() {
         timestamp: Date.now() 
       };
       setMessages(prev => [...prev, modelMsg]);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       const errorMsg: ChatMessage = { 
         id: (Date.now() + 1).toString(), 
         role: 'model', 
-        text: "I'm having trouble connecting to the matrix right now. Please try again in a moment.", 
-        timestamp: Date.now() 
+        text: e.message || "I'm having trouble connecting to the matrix right now. Please check your internet and try again.", 
+        timestamp: Date.now(),
+        isError: true
       };
       setMessages(prev => [...prev, errorMsg]);
     } finally {
@@ -701,7 +701,9 @@ export default function App() {
                   <div className={`p-7 rounded-[2.5rem] max-w-[85%] border shadow-xl transition-all
                     ${m.role === 'user' 
                       ? 'bg-emerald-500 text-zinc-950 border-emerald-400 rounded-tr-none font-bold' 
-                      : 'bg-zinc-900/80 backdrop-blur-md border-zinc-800 rounded-tl-none text-zinc-200 leading-relaxed'}`}>
+                      : m.isError 
+                        ? 'bg-red-500/10 border-red-500/50 rounded-tl-none text-red-200 leading-relaxed'
+                        : 'bg-zinc-900/80 backdrop-blur-md border-zinc-800 rounded-tl-none text-zinc-200 leading-relaxed'}`}>
                     <p className="text-base">{m.text}</p>
                     <div className={`mt-2 text-[10px] uppercase font-black tracking-widest ${m.role === 'user' ? 'text-zinc-900/40' : 'text-zinc-600'}`}>
                        {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -727,7 +729,7 @@ export default function App() {
           <div className="px-6 mb-4 overflow-x-auto scrollbar-hide flex gap-3">
              {[
                { icon: <FileText size={14}/>, text: "Review my resume" },
-               { icon: <Video size={14}/>, text: "Mock interview for "+userProfile?.goal },
+               { icon: <Video size={14}/>, text: "Mock interview for " + (userProfile?.goal || "AI Roles") },
                { icon: <Lightbulb size={14}/>, text: "Explain career growth" },
                { icon: <Target size={14}/>, text: "Analyze market demand" }
              ].map((suggestion, i) => (
@@ -745,7 +747,7 @@ export default function App() {
           {/* Input Area */}
           <div className="px-6">
             <div className="flex gap-4 bg-zinc-900 border border-white/10 p-3 rounded-[3rem] items-center shadow-2xl focus-within:border-emerald-500/50 transition-all focus-within:ring-4 focus-within:ring-emerald-500/5 backdrop-blur-xl">
-               <button className="p-3 text-zinc-500 hover:text-emerald-400 transition-colors"><Mic size={20}/></button>
+               <button className="p-3 text-zinc-500 hover:text-emerald-400 transition-colors" title="Voice Input Coming Soon"><Mic size={20}/></button>
                <input 
                 type="text" 
                 value={inputText}
@@ -780,20 +782,43 @@ export default function App() {
         </div>
       )}
 
-      {/* Global Loading Overlay */}
+      {/* Global Loading Overlay with Error Handling */}
       {loading.isActive && (
         <div className="fixed inset-0 z-[1200] bg-black/95 backdrop-blur-3xl flex flex-col items-center justify-center animate-fade-in">
-           <div className="relative w-32 h-32 mb-12">
-              <div className="absolute inset-0 border-8 border-emerald-500/10 rounded-full"></div>
-              <div className="absolute inset-0 border-8 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-              <div className="absolute inset-0 flex items-center justify-center text-emerald-500">
-                 <Zap size={48} className="animate-pulse" />
-              </div>
-           </div>
-           <div className="space-y-4 text-center">
-             <p className="text-emerald-400 font-black tracking-[0.6em] uppercase animate-pulse text-lg">{loading.message}</p>
-             <p className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">Optimizing Path Coefficients...</p>
-           </div>
+           {!loading.error ? (
+             <>
+               <div className="relative w-32 h-32 mb-12">
+                  <div className="absolute inset-0 border-8 border-emerald-500/10 rounded-full"></div>
+                  <div className="absolute inset-0 border-8 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
+                  <div className="absolute inset-0 flex items-center justify-center text-emerald-500">
+                     <Zap size={48} className="animate-pulse" />
+                  </div>
+               </div>
+               <div className="space-y-4 text-center">
+                 <p className="text-emerald-400 font-black tracking-[0.6em] uppercase animate-pulse text-lg">{loading.message}</p>
+                 <p className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">Optimizing Path Coefficients...</p>
+               </div>
+             </>
+           ) : (
+             <div className="max-w-md w-full glass-panel p-10 rounded-[3rem] text-center border-red-500/20">
+                <div className="w-20 h-20 bg-red-500/10 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                   <AlertCircle size={40} />
+                </div>
+                <h3 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Sync Interrupted</h3>
+                <p className="text-zinc-400 mb-10 leading-relaxed">{loading.error}</p>
+                <div className="flex flex-col gap-4">
+                   <Button size="lg" className="w-full bg-red-600 hover:bg-red-500 text-white" onClick={() => userProfile && handleOnboardingComplete(userProfile)} icon={<RefreshCw size={20}/>}>
+                      Retry Synchronization
+                   </Button>
+                   <button 
+                    onClick={() => setLoading({ isActive: false, message: '', error: null })}
+                    className="text-zinc-500 font-bold hover:text-white transition-colors text-sm"
+                   >
+                     Cancel
+                   </button>
+                </div>
+             </div>
+           )}
         </div>
       )}
     </AppLayout>
