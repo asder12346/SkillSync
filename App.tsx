@@ -9,7 +9,9 @@ import {
   Bot, User, TrendingUp, BrainCircuit, 
   ArrowRight, ArrowLeft, ChevronRight, GraduationCap,
   Briefcase, Globe, Settings, Layout, DollarSign, 
-  AlertCircle, FileText, Mic, Video, Lightbulb, Check, RefreshCw
+  AlertCircle, FileText, Mic, Video, Lightbulb, Check, RefreshCw,
+  UserCircle, Briefcase as ProfessionalIcon, Compass,
+  ShieldCheck, Loader2, Database, Cpu
 } from 'lucide-react';
 import { Button } from './components/Button';
 import { LandingPage } from './components/LandingPage';
@@ -28,30 +30,30 @@ const SplashScreen = ({ onFinished }: { onFinished: () => void }) => {
           setTimeout(onFinished, 500);
           return 100;
         }
-        return prev + 4;
+        return prev + 5;
       });
-    }, 20);
+    }, 30);
     return () => clearInterval(interval);
   }, [onFinished]);
 
   return (
     <div className="fixed inset-0 z-[1000] bg-[#050505] flex flex-col items-center justify-center">
       <div className="relative mb-8 animate-float">
-        <div className="w-24 h-24 bg-emerald-500 rounded-[2rem] flex items-center justify-center text-zinc-950 shadow-[0_0_60px_rgba(16,185,129,0.5)]">
+        <div className="w-24 h-24 bg-emerald-500 rounded-[2.5rem] flex items-center justify-center text-zinc-950 shadow-[0_0_60px_rgba(16,185,129,0.6)]">
           <Target size={52} strokeWidth={2.5} />
         </div>
-        <div className="absolute -inset-4 border border-emerald-500/20 rounded-[2.5rem] animate-pulse"></div>
+        <div className="absolute -inset-4 border border-emerald-500/20 rounded-[3rem] animate-pulse"></div>
       </div>
-      <h1 className="text-4xl font-black tracking-tighter uppercase text-white mb-2">SkillSync <span className="text-emerald-500">AI</span></h1>
-      <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.5em] mb-12">Initializing Career Matrix</p>
+      <h1 className="text-4xl font-black tracking-tighter uppercase text-white mb-2 italic">SkillSync <span className="text-emerald-500">AI</span></h1>
+      <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.5em] mb-12">Calibrating Career Matrix</p>
       
-      <div className="w-64 h-1.5 bg-zinc-900 rounded-full overflow-hidden relative border border-white/5">
+      <div className="w-64 h-1 bg-zinc-900 rounded-full overflow-hidden relative border border-white/5">
         <div 
           className="h-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)] transition-all duration-100 ease-out" 
           style={{ width: `${percent}%` }}
         ></div>
       </div>
-      <div className="mt-4 font-mono text-[10px] text-emerald-500 font-bold uppercase tracking-widest">{percent}% Synced</div>
+      <div className="mt-4 font-mono text-[10px] text-emerald-500 font-bold uppercase tracking-widest">{percent}% Loaded</div>
     </div>
   );
 };
@@ -77,7 +79,8 @@ const OnboardingWizard = ({ onComplete }: { onComplete: (profile: UserProfile) =
     { 
       id: 'Profile',
       title: "Who are you?", 
-      subtitle: "Personalize your career dashboard.",
+      subtitle: "Set up your professional identity for the neural link.",
+      icon: <UserCircle />,
       fields: [
         { label: 'Full Name', field: 'name', type: 'text', placeholder: 'e.g. Alex Chen' },
         { label: 'Email Address', field: 'email', type: 'email', placeholder: 'e.g. alex@example.com' }
@@ -86,20 +89,22 @@ const OnboardingWizard = ({ onComplete }: { onComplete: (profile: UserProfile) =
     { 
       id: 'Professional',
       title: "Current Status", 
-      subtitle: "Map your starting point.",
+      subtitle: "What is your starting point in the career matrix?",
+      icon: <ProfessionalIcon />,
       fields: [
-        { label: 'Current Role / Major', field: 'currentRole', type: 'text', placeholder: 'e.g. Computer Science Student' },
-        { label: 'Education Level', field: 'education', type: 'select', options: ['High School', 'Bachelors', 'Masters', 'PhD', 'Self-Taught'] },
-        { label: 'Years of Experience', field: 'yearsOfExp', type: 'number', placeholder: '0' }
+        { label: 'Current Role / Major', field: 'currentRole', type: 'text', placeholder: 'e.g. CS Student' },
+        { label: 'Highest Education', field: 'education', type: 'select', options: ['High School', 'Bachelors', 'Masters', 'PhD', 'Self-Taught'] },
+        { label: 'Experience (Years)', field: 'yearsOfExp', type: 'number', placeholder: '0' }
       ]
     },
     { 
       id: 'Goal',
-      title: "Future Goal", 
-      subtitle: "Where do you want to be?",
+      title: "Your North Star", 
+      subtitle: "Define the trajectory we are optimizing for.",
+      icon: <Compass />,
       fields: [
-        { label: 'Target Job Title', field: 'goal', type: 'text', placeholder: 'e.g. Senior Data Scientist' },
-        { label: 'Desired Career Level', field: 'experienceLevel', type: 'options', options: [
+        { label: 'Target Job Title', field: 'goal', type: 'text', placeholder: 'e.g. Senior AI Architect' },
+        { label: 'Target Seniority', field: 'experienceLevel', type: 'options', options: [
           { id: 'entry', label: 'Entry Level' },
           { id: 'mid', label: 'Mid Level' },
           { id: 'senior', label: 'Senior Level' }
@@ -116,48 +121,85 @@ const OnboardingWizard = ({ onComplete }: { onComplete: (profile: UserProfile) =
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 relative overflow-y-auto">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.08)_0,transparent_60%)]"></div>
-      <div className="max-w-xl w-full glass-panel p-8 md:p-12 rounded-[3rem] relative z-10 animate-slide-up border border-white/10 shadow-2xl my-10">
-        <div className="mb-10 flex gap-2">
-           {steps.map((_, i) => (
-             <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= step ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-zinc-800'}`}></div>
-           ))}
-        </div>
-        <h2 className="text-3xl font-black mb-2 text-white tracking-tighter uppercase">{currentStepData.title}</h2>
-        <p className="text-zinc-500 mb-8 font-medium">{currentStepData.subtitle}</p>
+    <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 md:p-10 relative overflow-y-auto custom-scroll">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.08)_0,transparent_60%)] pointer-events-none"></div>
+      
+      <div className="max-w-2xl w-full glass-panel p-8 md:p-16 rounded-[4rem] relative z-10 animate-slide-up border border-white/10 shadow-2xl my-10">
         
-        <div className="space-y-6">
+        {/* Engaging Progress Indicator */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between relative px-2">
+            <div className="absolute top-5 left-8 right-8 h-[2px] bg-zinc-800 -z-10 rounded-full"></div>
+            <div 
+              className="absolute top-5 left-8 h-[2px] bg-emerald-500 -z-10 transition-all duration-700 ease-in-out shadow-[0_0_10px_rgba(16,185,129,0.5)]" 
+              style={{ width: `calc(${(step / (steps.length - 1)) * 100}% - 40px)` }}
+            ></div>
+
+            {steps.map((s, i) => (
+              <div key={s.id} className="flex flex-col items-center gap-4 group">
+                <div 
+                  className={`w-12 h-12 rounded-[1.2rem] flex items-center justify-center transition-all duration-500 relative ${
+                    i < step 
+                    ? 'bg-emerald-500 text-zinc-950 shadow-[0_0_20px_rgba(16,185,129,0.4)]' 
+                    : i === step 
+                      ? 'bg-zinc-900 text-emerald-500 border-2 border-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.2)] scale-110' 
+                      : 'bg-zinc-900 text-zinc-700 border border-zinc-800'
+                  }`}
+                >
+                  {i < step ? <Check size={24} strokeWidth={3} /> : React.cloneElement(s.icon as React.ReactElement, { size: 24 })}
+                  {i === step && (
+                    <div className="absolute -inset-1 rounded-[1.4rem] border border-emerald-500/30 animate-pulse"></div>
+                  )}
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-300 ${i === step ? 'text-emerald-500' : 'text-zinc-600'}`}>
+                    {s.id}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <h2 className="text-4xl md:text-5xl font-black mb-3 text-white tracking-tighter uppercase leading-[0.9]">{currentStepData.title}</h2>
+        <p className="text-zinc-500 mb-12 font-medium text-lg leading-relaxed">{currentStepData.subtitle}</p>
+        
+        <div className="space-y-8">
           {currentStepData.fields.map(f => (
-            <div key={f.field} className="space-y-2">
-              <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest ml-1">{f.label}</label>
+            <div key={f.field} className="space-y-3">
+              <label className="text-[11px] font-black text-zinc-400 uppercase tracking-widest ml-1">{f.label}</label>
               {f.type === 'options' ? (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {f.options?.map(opt => (
                     <button
                       key={opt.id}
                       onClick={() => setProfile({...profile, [f.field]: opt.id})}
-                      className={`p-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${profile[f.field as keyof UserProfile] === opt.id ? 'bg-emerald-500 border-emerald-400 text-zinc-950 shadow-lg' : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:text-zinc-300'}`}
+                      className={`p-4 rounded-2xl border text-[11px] font-black uppercase tracking-[0.2em] transition-all h-16 ${profile[f.field as keyof UserProfile] === opt.id ? 'bg-emerald-500 border-emerald-400 text-zinc-950 shadow-xl shadow-emerald-500/20' : 'bg-zinc-900/50 border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'}`}
                     >
                       {opt.label}
                     </button>
                   ))}
                 </div>
               ) : f.type === 'select' ? (
-                <select 
-                  value={(profile as any)[f.field]}
-                  onChange={e => setProfile({...profile, [f.field]: e.target.value})}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                >
-                  <option value="">Select Option</option>
-                  {f.options?.map(o => <option key={o} value={o}>{o}</option>)}
-                </select>
+                <div className="relative group">
+                  <select 
+                    value={(profile as any)[f.field]}
+                    onChange={e => setProfile({...profile, [f.field]: e.target.value})}
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-5 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none cursor-pointer group-hover:border-zinc-600"
+                  >
+                    <option value="">Choose category</option>
+                    {f.options?.map(o => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
+                    <ChevronRight size={20} className="rotate-90" />
+                  </div>
+                </div>
               ) : (
                 <input 
                   type={f.type}
                   value={(profile as any)[f.field]}
                   onChange={e => setProfile({...profile, [f.field]: e.target.value})}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-5 py-4 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder:text-zinc-700 transition-all"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl px-6 py-5 text-white focus:ring-2 focus:ring-emerald-500 outline-none placeholder:text-zinc-700 transition-all hover:border-zinc-600"
                   placeholder={f.placeholder}
                 />
               )}
@@ -165,28 +207,103 @@ const OnboardingWizard = ({ onComplete }: { onComplete: (profile: UserProfile) =
           ))}
         </div>
         
-        <div className="mt-12 flex justify-between gap-4">
+        <div className="mt-16 flex flex-col-reverse sm:flex-row justify-between gap-4">
            {step > 0 && (
-             <Button variant="ghost" onClick={() => setStep(step - 1)} className="px-8">Back</Button>
+             <button onClick={() => setStep(step - 1)} className="px-10 h-16 rounded-2xl border border-zinc-800 text-zinc-500 font-black uppercase tracking-widest text-xs hover:text-white hover:border-zinc-600 transition-all">Back</button>
            )}
-           <Button className="flex-1 h-14 text-lg font-black uppercase tracking-widest" onClick={next}>{step === steps.length - 1 ? 'Start Sync' : 'Continue'}</Button>
+           <Button className="flex-1 h-16 text-xl font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-emerald-500/10" onClick={next}>
+             {step === steps.length - 1 ? 'Activate Sync' : 'Proceed'} <ArrowRight size={22} className="ml-2" />
+           </Button>
         </div>
       </div>
     </div>
   );
 };
 
+// --- Syncing Animation Component ---
+const NeuralSyncLoader = ({ messages }: { messages: string[] }) => {
+  const [currentMsgIdx, setCurrentMsgIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMsgIdx(prev => (prev + 1) % messages.length);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, [messages]);
+
+  return (
+    <div className="flex flex-col items-center justify-center animate-fade-in text-center p-6">
+      <div className="relative w-64 h-64 mb-16 group">
+        {/* Outer rotating ring */}
+        <div className="absolute inset-0 border-[1px] border-emerald-500/10 rounded-full scale-110"></div>
+        <div className="absolute inset-0 border-t-[4px] border-emerald-500 rounded-full animate-spin"></div>
+        
+        {/* Middle reverse rotating ring */}
+        <div className="absolute inset-4 border-[1px] border-emerald-500/20 rounded-full"></div>
+        <div className="absolute inset-4 border-b-[2px] border-emerald-500/40 rounded-full animate-[spin_3s_linear_infinite_reverse]"></div>
+        
+        {/* Inner pulsing core */}
+        <div className="absolute inset-8 bg-emerald-500/5 rounded-full flex items-center justify-center backdrop-blur-3xl border border-emerald-500/10 shadow-[0_0_100px_rgba(16,185,129,0.1)]">
+          <div className="relative">
+             <div className="absolute inset-0 bg-emerald-500 blur-2xl opacity-20 animate-pulse"></div>
+             <Zap size={64} className="text-emerald-500 relative z-10 animate-float" />
+          </div>
+        </div>
+
+        {/* Floating status icons */}
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 animate-bounce">
+          <Database size={24} className="text-emerald-500 opacity-60" />
+        </div>
+        <div className="absolute top-1/2 -right-4 -translate-y-1/2 animate-[pulse_2s_infinite]">
+          <Cpu size={24} className="text-emerald-400 opacity-60" />
+        </div>
+        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 animate-float">
+          <Globe size={24} className="text-blue-400 opacity-40" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-emerald-500 font-black tracking-[1.2em] uppercase text-2xl animate-pulse pl-[1.2em]">Neural Sync</h3>
+        <div className="h-6 flex items-center justify-center overflow-hidden">
+          <p key={currentMsgIdx} className="text-zinc-500 font-mono text-sm uppercase tracking-[0.3em] animate-slide-up">
+            {messages[currentMsgIdx]}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-16 w-48 h-[2px] bg-zinc-900 rounded-full overflow-hidden border border-white/5">
+        <div className="h-full bg-emerald-500 animate-[loading_8s_ease-in-out_infinite]"></div>
+      </div>
+      <style>{`
+        @keyframes loading {
+          0% { width: 0%; left: 0%; }
+          50% { width: 100%; left: 0%; }
+          100% { width: 0%; left: 100%; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 // --- Navigation Item Component ---
 const NavIcon = ({ icon, label, active, onClick }: { icon: any, label: string, active: boolean, onClick: () => void }) => (
-  <button onClick={onClick} className="flex flex-col items-center gap-1.5 group outline-none">
-    <div className={`p-2.5 rounded-2xl transition-all duration-300 flex items-center justify-center ${active ? 'bg-emerald-500 text-zinc-950 scale-110 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 'text-zinc-500 group-hover:text-zinc-300 group-hover:bg-zinc-900/50'}`}>
-       {React.cloneElement(icon, { size: 22, strokeWidth: active ? 2.5 : 2 })}
+  <button 
+    onClick={onClick} 
+    className="flex flex-col items-center justify-center flex-1 h-full gap-1 group outline-none transition-all duration-300"
+  >
+    <div className={`relative p-2.5 rounded-2xl transition-all duration-300 ${active ? 'text-emerald-500 scale-110' : 'text-zinc-600 group-hover:text-zinc-400 group-hover:bg-zinc-900/50'}`}>
+       {React.cloneElement(icon, { size: 24, strokeWidth: active ? 2.5 : 2 })}
+       {active && (
+         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+       )}
     </div>
-    <span className={`text-[9px] font-black uppercase tracking-widest transition-colors ${active ? 'text-emerald-500' : 'text-zinc-600 group-hover:text-zinc-400'}`}>{label}</span>
+    <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${active ? 'text-emerald-500' : 'text-zinc-600 group-hover:text-zinc-400'}`}>
+      {label}
+    </span>
   </button>
 );
 
-// --- App Layout ---
+// --- App Layout with Bottom Navigation ---
 const AppLayout: React.FC<{ 
   children: React.ReactNode; 
   view: AppView; 
@@ -194,35 +311,36 @@ const AppLayout: React.FC<{
   userProfile: UserProfile | null 
 }> = ({ children, view, setView, userProfile }) => (
   <div className="flex flex-col h-screen bg-[#050505] overflow-hidden">
-    {/* Header */}
-    <header className="h-16 md:h-20 border-b border-white/5 flex items-center justify-between px-6 md:px-12 shrink-0 bg-black/40 backdrop-blur-xl z-50">
+    {/* Minimal App Header */}
+    <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 md:px-12 shrink-0 bg-black/60 backdrop-blur-2xl z-50">
        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setView('dashboard')}>
-          <div className="w-8 h-8 md:w-9 md:h-9 bg-emerald-500 rounded-xl flex items-center justify-center text-zinc-950 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-             <Target size={20} strokeWidth={2.5} />
+          <div className="w-8 h-8 bg-emerald-500 rounded-xl flex items-center justify-center text-zinc-950 shadow-[0_0_15px_rgba(16,185,129,0.3)] group-hover:scale-105 transition-transform">
+             <Target size={18} strokeWidth={3} />
           </div>
-          <span className="font-black text-lg md:text-xl tracking-tighter uppercase text-white group-hover:text-emerald-400 transition-colors">SkillSync <span className="text-emerald-500 text-[10px] font-mono">AI</span></span>
+          <span className="font-black text-lg tracking-tighter uppercase text-white group-hover:text-emerald-400 transition-colors">SkillSync <span className="text-emerald-500 font-mono text-[9px]">AI</span></span>
        </div>
        <div className="flex items-center gap-6">
           <div className="hidden sm:flex flex-col items-end">
-             <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Market Status</span>
-             <span className="text-emerald-500 font-bold text-xs flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div> HIGH DEMAND</span>
+             <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Global Status</span>
+             <span className="text-emerald-500 font-bold text-[10px] flex items-center gap-1.5 leading-none">
+               <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div> 
+               ACTIVE SYNC
+             </span>
           </div>
-          <button className="p-2 text-zinc-400 hover:text-white transition-colors relative">
+          <button className="p-2 text-zinc-500 hover:text-white transition-colors relative">
              <Bell size={20}/>
-             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+             <span className="absolute top-1.5 right-1.5 w-1 h-1 bg-emerald-500 rounded-full"></span>
           </button>
        </div>
     </header>
 
-    {/* Content Area - Scrollable */}
-    <main className="flex-1 overflow-y-auto custom-scroll relative bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.03)_0%,transparent_50%)]">
-      <div className="max-w-6xl mx-auto w-full p-6 md:p-12 pb-32 md:pb-32">
+    <main className="flex-1 overflow-y-auto custom-scroll relative bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.02)_0%,transparent_50%)]">
+      <div className="max-w-6xl mx-auto w-full p-6 md:p-12 pb-36">
         {children}
       </div>
     </main>
 
-    {/* Bottom Navigation Bar */}
-    <nav className="fixed bottom-0 left-0 right-0 h-20 md:h-24 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-2 z-50 safe-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 h-[84px] bg-zinc-950/90 backdrop-blur-3xl border-t border-white/10 flex items-center justify-around px-2 z-50 safe-bottom shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
        <NavIcon icon={<Layout />} label="Dash" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
        <NavIcon icon={<BarChart3 />} label="Gap" active={view === 'skills'} onClick={() => setView('skills')} />
        <NavIcon icon={<MessageSquare />} label="Coach" active={view === 'coach'} onClick={() => setView('coach')} />
@@ -243,24 +361,31 @@ export default function App() {
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    if (view === 'coach') scrollToBottom();
-  }, [messages, isTyping, view]);
+  const syncStages = [
+    "Encoding professional DNA...",
+    "Scanning market coordinates...",
+    "Calibrating neural pathways...",
+    "Synthesizing market telemetry...",
+    "Synchronizing skill competency matrix...",
+    "Finalizing trajectory recommendation..."
+  ];
 
   const handleOnboardingComplete = async (profile: UserProfile) => {
     setUserProfile(profile);
-    setLoading({ isActive: true, message: 'Synchronizing with career matrix...', error: null });
+    setLoading({ isActive: true, message: 'Mapping career coordinates...', error: null });
+    
     try {
-      const gaps = await analyzeSkillGap([], profile.goal);
+      // Intentional delay to show the beautiful syncing animation
+      const dataPromise = analyzeSkillGap([], profile.goal);
+      const delayPromise = new Promise(resolve => setTimeout(resolve, 5500));
+      
+      const [gaps] = await Promise.all([dataPromise, delayPromise]);
+      
       setSkills(gaps);
-      setView('dashboard');
       setLoading({ isActive: false, message: '' });
+      setView('dashboard');
     } catch (e: any) {
-      setLoading({ isActive: true, message: '', error: e.message || "Failed to sync profile." });
+      setLoading({ isActive: true, message: '', error: e.message || "Failed to synchronize profile." });
     }
   };
 
@@ -278,7 +403,7 @@ export default function App() {
       const modelMsg: ChatMessage = { id: (Date.now() + 1).toString(), role: 'model', text: response, timestamp: Date.now() };
       setMessages(prev => [...prev, modelMsg]);
     } catch (e: any) {
-      setMessages(prev => [...prev, { id: 'err', role: 'model', text: "Failed to connect to the brain. Check internet.", timestamp: Date.now(), isError: true }]);
+      setMessages(prev => [...prev, { id: 'err', role: 'model', text: "Neural link timeout. Check connectivity.", timestamp: Date.now(), isError: true }]);
     } finally {
       setIsTyping(false);
     }
@@ -291,121 +416,142 @@ export default function App() {
   return (
     <AppLayout view={view} setView={setView} userProfile={userProfile}>
       {view === 'dashboard' && (
-        <div className="animate-fade-in space-y-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-            <div className="max-w-xl">
-               <h1 className="text-4xl md:text-6xl font-black mb-3 tracking-tighter uppercase text-white leading-tight">Sync <span className="text-emerald-500">Active</span> 👋</h1>
-               <p className="text-zinc-500 text-lg md:text-xl font-medium leading-relaxed">
-                 Hello {userProfile?.name?.split(' ')[0] || 'User'}, your trajectory towards <span className="text-white font-black underline decoration-emerald-500/30 underline-offset-4">{userProfile?.goal}</span> is active.
+        <div className="animate-fade-in space-y-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+            <div className="max-w-2xl">
+               <h1 className="text-5xl md:text-8xl font-black mb-4 tracking-tighter uppercase text-white leading-[0.8]">Neural <span className="text-emerald-500">Link</span></h1>
+               <p className="text-zinc-500 text-lg md:text-3xl font-medium leading-tight">
+                 Welcome back, {userProfile?.name?.split(' ')[0] || 'User'}. Your path towards <span className="text-white font-black italic underline decoration-emerald-500/20 underline-offset-8 decoration-4">{userProfile?.goal}</span> is active.
                </p>
             </div>
             <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-               <div className="px-8 py-6 glass-panel rounded-[2.5rem] text-center border-emerald-500/20 shadow-xl">
-                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Employability</p>
-                  <p className="text-3xl font-black text-emerald-400">82%</p>
+               <div className="px-10 py-8 glass-panel rounded-[3rem] text-center border-emerald-500/20 shadow-2xl">
+                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Market Match</p>
+                  <p className="text-5xl font-black text-emerald-400">82%</p>
                </div>
-               <div className="px-8 py-6 glass-panel rounded-[2.5rem] text-center shadow-xl">
-                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Momentum</p>
-                  <p className="text-3xl font-black text-white">4d</p>
+               <div className="px-10 py-8 glass-panel rounded-[3rem] text-center shadow-2xl border-white/5">
+                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Sync Streak</p>
+                  <p className="text-5xl font-black text-white">4d</p>
                </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: 'Market Demand', val: 'Critical', icon: <TrendingUp className="text-emerald-400"/> },
-              { label: 'Growth Delta', val: '+14.2%', icon: <Sparkles className="text-purple-400"/> },
+              { label: 'Demand Index', val: 'Critical', icon: <TrendingUp className="text-emerald-400"/> },
+              { label: 'Growth Rate', val: '+14.2%', icon: <Sparkles className="text-purple-400"/> },
               { label: 'Salary Target', val: '$132k', icon: <DollarSign className="text-blue-400"/> },
-              { label: 'Industry Fit', val: 'Strong', icon: <Target className="text-orange-400"/> }
+              { label: 'Stability', val: 'Very High', icon: <ShieldCheck className="text-orange-400" size={24}/> }
             ].map((stat, i) => (
-              <div key={i} className="glass-panel p-8 rounded-[2.5rem] hover:border-emerald-500/30 transition-all flex flex-col gap-6 group">
-                <div className="p-3 bg-zinc-950 rounded-2xl w-fit group-hover:scale-110 transition-transform">{stat.icon}</div>
+              <div key={i} className="glass-panel p-10 rounded-[3.5rem] hover:border-emerald-500/30 transition-all flex flex-col gap-10 group cursor-default">
+                <div className="p-5 bg-zinc-950 rounded-2xl w-fit group-hover:scale-110 transition-transform shadow-inner border border-white/5">{stat.icon}</div>
                 <div>
-                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">{stat.label}</p>
-                  <p className="text-3xl font-black text-white">{stat.val}</p>
+                  <p className="text-[11px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-1">{stat.label}</p>
+                  <p className="text-4xl font-black text-white">{stat.val}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-             <div className="lg:col-span-2 space-y-10">
-                <div className="glass-panel p-8 md:p-12 rounded-[3.5rem] relative overflow-hidden border border-emerald-500/10">
-                   <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 blur-[120px] -z-10"></div>
-                   <h3 className="text-2xl font-black mb-10 flex items-center gap-4 uppercase tracking-tighter text-white">
-                     <Zap size={28} className="text-emerald-400 animate-pulse-slow fill-emerald-500/20"/> Priority Sync Task
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+             <div className="lg:col-span-2 space-y-12">
+                <div className="glass-panel p-10 md:p-14 rounded-[4.5rem] relative overflow-hidden border border-emerald-500/10">
+                   <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/[0.03] blur-[150px] -z-10 rounded-full"></div>
+                   <h3 className="text-3xl font-black mb-12 flex items-center gap-6 uppercase tracking-tighter text-white">
+                     <div className="p-4 bg-emerald-500/10 rounded-2xl"><Zap size={36} className="text-emerald-400 fill-emerald-500/20"/></div> Priority Sync
                    </h3>
-                   <div className="bg-zinc-950/60 border border-white/5 p-8 rounded-[3rem] flex flex-col md:flex-row items-center gap-12">
+                   <div className="bg-zinc-950/60 border border-white/5 p-12 rounded-[4rem] flex flex-col md:flex-row items-center gap-16 shadow-inner">
                       <div className="flex-1 text-center md:text-left">
-                         <p className="text-zinc-400 text-lg md:text-xl leading-relaxed mb-10">
-                           The current job market for <strong>{userProfile?.goal}</strong> has shifted 18% towards <span className="text-emerald-400 font-bold px-2 py-0.5 bg-emerald-500/10 rounded-lg italic">Multi-Modal AI Integration</span>.
+                         <p className="text-zinc-400 text-2xl md:text-3xl leading-snug mb-12">
+                           Market analysis for <strong>{userProfile?.goal}</strong> indicates an 18% shift towards <span className="text-emerald-400 font-black italic underline decoration-emerald-500/40">Multi-Modal AI Systems</span>.
                          </p>
-                         <Button size="lg" icon={<ArrowRight size={22}/>} className="px-12 h-18 text-lg font-black tracking-widest uppercase shadow-2xl">Adapt Pathway</Button>
+                         <Button size="lg" icon={<ArrowRight size={24}/>} className="px-16 h-20 text-xl font-black tracking-widest uppercase rounded-2xl shadow-2xl shadow-emerald-500/20">Recalibrate</Button>
                       </div>
-                      <div className="shrink-0 w-40 h-40 relative flex items-center justify-center">
+                      <div className="shrink-0 w-48 h-48 relative flex items-center justify-center group/ready cursor-pointer">
                          <svg className="w-full h-full -rotate-90">
-                           <circle cx="80" cy="80" r="70" className="fill-none stroke-zinc-900 stroke-[10]" />
-                           <circle cx="80" cy="80" r="70" className="fill-none stroke-emerald-500 stroke-[10] shadow-[0_0_20px_rgba(16,185,129,0.3)]" strokeDasharray="440" strokeDashoffset="120" />
+                           <circle cx="96" cy="96" r="86" className="fill-none stroke-zinc-900 stroke-[14]" />
+                           <circle cx="96" cy="96" r="86" className="fill-none stroke-emerald-500 stroke-[14] shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all duration-1000" strokeDasharray="540" strokeDashoffset="150" />
                          </svg>
-                         <div className="absolute flex flex-col items-center">
-                            <span className="font-black text-4xl text-emerald-400">72%</span>
-                            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Ready</span>
+                         <div className="absolute flex flex-col items-center transition-transform group-hover/ready:scale-110 duration-500">
+                            <span className="font-black text-6xl text-emerald-400 leading-none">72</span>
+                            <span className="text-[12px] font-black text-zinc-600 uppercase tracking-[0.4em] mt-2">Ready</span>
                          </div>
                       </div>
                    </div>
                 </div>
 
-                <div className="glass-panel p-10 rounded-[3.5rem]">
-                   <h3 className="text-2xl font-black mb-12 uppercase tracking-tighter text-white">Skill Matrix Snapshot</h3>
-                   <div className="space-y-10">
-                      {skills.slice(0, 4).map((s, i) => (
-                        <div key={i} className="space-y-4">
-                           <div className="flex justify-between items-end">
-                              <span className="text-sm font-black uppercase tracking-widest text-zinc-400">{s.name}</span>
-                              <span className="font-mono text-emerald-500 font-black text-lg">{s.level}%</span>
+                <div className="glass-panel p-12 md:p-16 rounded-[4.5rem]">
+                   <div className="flex justify-between items-center mb-16 px-2">
+                      <h3 className="text-3xl font-black uppercase tracking-tighter text-white">Skill Matrix Breakdown</h3>
+                      <button className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.4em] hover:text-white transition-colors">Neural Sync</button>
+                   </div>
+                   <div className="space-y-14">
+                      {skills.length > 0 ? skills.slice(0, 4).map((s, i) => (
+                        <div key={i} className="space-y-6">
+                           <div className="flex justify-between items-end px-2">
+                              <span className="text-base font-black uppercase tracking-[0.2em] text-zinc-500">{s.name}</span>
+                              <div className="flex items-baseline gap-3">
+                                <span className="font-mono text-emerald-500 font-black text-3xl">{s.level}%</span>
+                                <span className="text-[11px] font-black text-zinc-800 uppercase tracking-widest">/ Opt</span>
+                              </div>
                            </div>
-                           <div className="h-2.5 bg-zinc-950 rounded-full border border-white/5 overflow-hidden">
-                              <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(16,185,129,0.5)]" style={{width: `${s.level}%`}}></div>
+                           <div className="h-5 bg-zinc-950 rounded-full border border-white/5 overflow-hidden p-1.5 shadow-inner">
+                              <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000 shadow-[0_0_20px_rgba(16,185,129,0.5)]" style={{width: `${s.level}%`}}></div>
                            </div>
                         </div>
-                      ))}
+                      )) : (
+                        <div className="py-24 text-center">
+                           <RefreshCw size={52} className="mx-auto text-zinc-800 animate-spin mb-6" />
+                           <p className="text-zinc-600 font-black uppercase tracking-[0.4em] text-sm">Mapping Competency Map...</p>
+                        </div>
+                      )}
                    </div>
-                   <Button variant="ghost" className="w-full mt-10 h-14 group">
-                      Expand Full Analysis <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                   <Button variant="ghost" className="w-full mt-16 h-20 group rounded-3xl hover:bg-zinc-900/50 text-zinc-500 text-lg">
+                      View Advanced Analytics <ChevronRight size={24} className="ml-4 group-hover:translate-x-2 transition-transform" />
                    </Button>
                 </div>
              </div>
 
-             <div className="space-y-8">
-                <div className="p-10 bg-emerald-500/5 border border-emerald-500/20 rounded-[3.5rem] relative overflow-hidden group">
-                   <div className="flex items-center gap-4 mb-8">
-                      <div className="p-3 bg-emerald-500 rounded-2xl text-zinc-950 shadow-lg shadow-emerald-500/20"><MessageSquare size={22}/></div>
-                      <p className="text-xs font-black text-emerald-400 uppercase tracking-[0.2em]">Coach Insight</p>
+             <div className="space-y-12">
+                <div className="p-12 bg-emerald-500/[0.04] border border-emerald-500/20 rounded-[4.5rem] relative overflow-hidden group shadow-2xl">
+                   <div className="absolute -bottom-16 -right-16 text-emerald-500/[0.03] rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                      <MessageSquare size={280} />
                    </div>
-                   <p className="text-lg text-zinc-300 leading-relaxed font-medium mb-10 italic">
-                     "Your Python trajectory is 32% ahead of benchmark. Accelerate into <span className="text-white font-black">Applied LLM Frameworks</span> now to trigger senior-level match signals."
+                   <div className="flex items-center gap-6 mb-12 relative z-10">
+                      <div className="p-5 bg-emerald-500 rounded-2xl text-zinc-950 shadow-2xl shadow-emerald-500/40"><MessageSquare size={32}/></div>
+                      <div>
+                         <p className="text-[12px] font-black text-emerald-500 uppercase tracking-[0.4em]">Coach Signal</p>
+                         <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mt-1">L5 AI AGENT</p>
+                      </div>
+                   </div>
+                   <p className="text-2xl text-zinc-300 leading-snug font-bold mb-16 italic relative z-10">
+                     "Your trajectory is 32% ahead of market benchmark. Prioritize <span className="text-white font-black underline decoration-emerald-500/30 underline-offset-8 decoration-4 italic">Applied RAG Frameworks</span> this week to trigger senior match signals."
                    </p>
-                   <Button variant="outline" className="w-full h-14 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10" onClick={() => setView('coach')}>Open Sync Chat</Button>
+                   <Button variant="outline" className="w-full h-20 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 rounded-3xl font-black uppercase tracking-widest relative z-10 text-lg shadow-xl" onClick={() => setView('coach')}>Initialize Chat</Button>
                 </div>
 
-                <div className="glass-panel p-10 rounded-[3.5rem] border-white/5">
-                   <h3 className="text-xl font-black mb-8 uppercase tracking-tighter text-white">Live Matches</h3>
-                   <div className="space-y-6">
+                <div className="glass-panel p-12 rounded-[4rem] border-white/5 shadow-2xl">
+                   <h3 className="text-3xl font-black mb-12 uppercase tracking-tighter text-white">Live Matches</h3>
+                   <div className="space-y-10">
                       {[
-                        { role: 'AI Architect', co: 'Nebula', match: 94 },
-                        { role: 'Data Lead', co: 'Synth', match: 88 },
-                        { role: 'Product Sync', co: 'Aura', match: 72 }
+                        { role: 'Senior AI Engineer', co: 'Nebula.io', match: 94 },
+                        { role: 'Data Strategist', co: 'Synth Lab', match: 88 },
+                        { role: 'Product Lead', co: 'Aura', match: 72 }
                       ].map((job, i) => (
-                        <div key={i} className="flex items-center gap-4 p-5 bg-zinc-950/40 rounded-3xl border border-white/5 hover:border-emerald-500/40 transition-all cursor-pointer">
-                           <div className="w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-emerald-500/50"><Briefcase size={24}/></div>
+                        <div key={i} className="flex items-center gap-8 p-7 bg-zinc-950/40 rounded-[2.5rem] border border-white/5 hover:border-emerald-500/40 transition-all cursor-pointer group/job shadow-inner">
+                           <div className="w-16 h-16 rounded-3xl bg-zinc-900 flex items-center justify-center text-emerald-500/40 group-hover/job:text-emerald-500 transition-colors shadow-inner"><Briefcase size={32}/></div>
                            <div className="flex-1">
-                              <p className="font-black text-white text-sm">{job.role}</p>
-                              <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{job.co}</p>
+                              <p className="font-black text-white text-lg group-hover/job:text-emerald-400 transition-colors">{job.role}</p>
+                              <p className="text-[11px] text-zinc-600 uppercase tracking-[0.3em] font-black mt-1.5">{job.co}</p>
                            </div>
-                           <span className="text-emerald-500 font-black text-xs">{job.match}%</span>
+                           <div className="text-right">
+                              <span className="text-emerald-500 font-black text-lg">{job.match}%</span>
+                              <p className="text-[9px] font-black text-zinc-800 uppercase tracking-widest mt-1">Match</p>
+                           </div>
                         </div>
                       ))}
                    </div>
+                   <button className="w-full mt-12 py-6 text-[11px] font-black text-zinc-600 uppercase tracking-[0.5em] hover:text-white transition-colors">Analyze Pipeline</button>
                 </div>
              </div>
           </div>
@@ -413,119 +559,85 @@ export default function App() {
       )}
 
       {view === 'coach' && (
-        <div className="animate-fade-in flex flex-col h-[calc(100vh-16rem)] md:h-[calc(100vh-20rem)] max-w-4xl mx-auto relative bg-zinc-950/40 rounded-[3rem] border border-white/5 overflow-hidden shadow-2xl">
-          <div className="flex-1 overflow-y-auto space-y-10 p-6 md:p-10 scrollbar-hide custom-scroll">
-             <div className="flex gap-5">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-zinc-950 flex-shrink-0 shadow-lg shadow-emerald-500/20"><Bot size={24}/></div>
-                <div className="bg-zinc-900 border border-white/5 p-7 rounded-[2.5rem] rounded-tl-none shadow-xl">
-                   <p className="text-base text-zinc-200 leading-relaxed font-medium">
-                      Sync established. I've mapped over 2M job data points for <strong>{userProfile?.goal || 'Your Target'}</strong>. 
-                      What trajectory shift shall we analyze today?
+        <div className="animate-fade-in flex flex-col h-[calc(100vh-16rem)] md:h-[calc(100vh-20rem)] max-w-4xl mx-auto relative bg-zinc-950/50 rounded-[4rem] border border-white/10 overflow-hidden shadow-2xl">
+          <div className="px-12 py-8 border-b border-white/10 flex items-center justify-between bg-zinc-900/40 backdrop-blur-md shrink-0">
+             <div className="flex items-center gap-5">
+                <div className="w-4 h-4 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                <div>
+                   <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] block">Neural Coach Protocol</span>
+                </div>
+             </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto space-y-12 p-8 md:p-14 scrollbar-hide custom-scroll">
+             <div className="flex gap-8">
+                <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-500 flex items-center justify-center text-zinc-950 flex-shrink-0 shadow-2xl shadow-emerald-500/40"><Bot size={32}/></div>
+                <div className="bg-zinc-900/60 border border-white/10 p-10 rounded-[3.5rem] rounded-tl-none shadow-2xl backdrop-blur-md max-w-[90%]">
+                   <p className="text-xl text-zinc-200 leading-snug font-semibold">
+                      Connection secure, {userProfile?.name?.split(' ')[0]}. My current trajectory analysis for <strong>{userProfile?.goal || 'target bandwidth'}</strong> is synchronized. 
                    </p>
-                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {[
-                        { icon: <FileText size={16}/>, text: "Resume Critique" },
-                        { icon: <Briefcase size={16}/>, text: "Mock Interview" },
-                        { icon: <Lightbulb size={16}/>, text: "Skill Roadmap" },
-                        { icon: <Target size={16}/>, text: "Salary Sync" }
-                      ].map((chip, i) => (
-                        <button key={i} onClick={() => handleSendMessage(chip.text)} className="flex items-center gap-3 p-4 bg-zinc-950/60 rounded-2xl border border-white/5 hover:border-emerald-500/30 transition-all text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white group">
-                           <span className="text-emerald-500/50 group-hover:text-emerald-500 transition-colors">{chip.icon}</span> {chip.text}
-                        </button>
-                      ))}
-                   </div>
                 </div>
              </div>
 
              {messages.map((m) => (
-               <div key={m.id} className={`flex gap-5 ${m.role === 'user' ? 'flex-row-reverse' : ''} animate-slide-up`}>
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg
-                    ${m.role === 'user' ? 'bg-zinc-800 text-emerald-400' : 'bg-emerald-500 text-zinc-950'}`}>
-                    {m.role === 'user' ? <User size={24} /> : <Bot size={24} />}
+               <div key={m.id} className={`flex gap-8 ${m.role === 'user' ? 'flex-row-reverse' : ''} animate-slide-up`}>
+                  <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center flex-shrink-0 shadow-2xl transition-transform hover:scale-110
+                    ${m.role === 'user' ? 'bg-zinc-800 text-emerald-400 border border-emerald-500/20' : 'bg-emerald-500 text-zinc-950 shadow-emerald-500/20'}`}>
+                    {m.role === 'user' ? <User size={32} /> : <Bot size={32} />}
                   </div>
-                  <div className={`p-7 rounded-[2.5rem] max-w-[85%] md:max-w-[75%] border shadow-2xl transition-all
+                  <div className={`p-10 rounded-[3.5rem] max-w-[90%] md:max-w-[80%] border shadow-2xl transition-all
                     ${m.role === 'user' 
-                      ? 'bg-emerald-500 text-zinc-950 border-emerald-400 rounded-tr-none font-black' 
+                      ? 'bg-emerald-500 text-zinc-950 border-emerald-400 rounded-tr-none font-black text-xl leading-tight' 
                       : m.isError 
                         ? 'bg-red-500/10 border-red-500/50 rounded-tl-none text-red-200'
-                        : 'bg-zinc-900/80 border-zinc-800 rounded-tl-none text-zinc-200 leading-relaxed font-medium'}`}>
+                        : 'bg-zinc-900/60 backdrop-blur-3xl border-zinc-800 rounded-tl-none text-zinc-200 leading-snug font-bold text-lg'}`}>
                     <p>{m.text}</p>
-                    <div className={`mt-3 text-[9px] uppercase font-black tracking-widest ${m.role === 'user' ? 'text-zinc-900/30' : 'text-zinc-600'}`}>
-                       {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
                   </div>
                </div>
              ))}
 
              {isTyping && (
-               <div className="flex gap-5 animate-pulse">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0"><Bot size={24}/></div>
-                  <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-[2.5rem] rounded-tl-none flex items-center gap-2">
-                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></div>
-                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce delay-150"></div>
-                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce delay-300"></div>
-                  </div>
+               <div className="flex gap-8 animate-pulse">
+                  <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0"><Bot size={32}/></div>
                </div>
              )}
              <div ref={chatEndRef} />
           </div>
 
-          <div className="p-6 md:p-8 shrink-0 bg-black/40 backdrop-blur-xl border-t border-white/5">
-            <div className="flex gap-4 bg-zinc-900 border border-white/10 p-2.5 rounded-[2.5rem] items-center shadow-2xl focus-within:border-emerald-500/50 transition-all">
-               <button className="p-3 text-zinc-500 hover:text-emerald-400 transition-colors"><Mic size={22}/></button>
+          <div className="p-10 md:p-14 shrink-0 bg-black/40 backdrop-blur-3xl border-t border-white/10">
+            <div className="flex gap-6 bg-zinc-900 border border-white/10 p-4 rounded-[3.5rem] items-center shadow-2xl focus-within:border-emerald-500/50 transition-all ring-emerald-500/5 focus-within:ring-[12px]">
                <input 
                 type="text" 
                 value={inputText}
                 onChange={e => setInputText(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Talk to your Coach..." 
-                className="flex-1 bg-transparent border-none text-base focus:ring-0 px-2 py-3 placeholder:text-zinc-700 text-white font-medium"
+                placeholder="Synchronize request..." 
+                className="flex-1 bg-transparent border-none text-xl focus:ring-0 px-2 py-5 placeholder:text-zinc-800 text-white font-bold"
               />
               <button 
                 onClick={() => handleSendMessage()}
                 disabled={!inputText.trim() || isTyping}
-                className="w-14 h-14 bg-emerald-500 text-zinc-950 rounded-[1.6rem] hover:bg-emerald-400 transition-all active:scale-90 flex items-center justify-center shadow-xl shadow-emerald-500/20 disabled:opacity-50"
+                className="w-20 h-20 bg-emerald-500 text-zinc-950 rounded-[2rem] hover:bg-emerald-400 transition-all flex items-center justify-center shadow-2xl shadow-emerald-500/40 disabled:opacity-50"
               >
-                <Send size={24} />
+                <Send size={36} />
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Generic Placeholder for other views */}
-      {(view === 'skills' || view === 'pathway' || view === 'settings') && (
-        <div className="animate-fade-in flex flex-col items-center justify-center py-24 text-center space-y-12">
-           <div className="p-20 rounded-[4rem] bg-emerald-500/[0.04] text-emerald-500/30 border border-emerald-500/10 shadow-2xl animate-float">
-              <Sparkles size={120} />
-           </div>
-           <div className="space-y-6">
-              <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">Synthesizing {view}</h2>
-              <p className="text-zinc-500 max-w-lg mx-auto text-xl leading-relaxed font-medium">Your personalized career roadmap for this module is being calibrated based on current market coefficients.</p>
-           </div>
-           <Button size="lg" variant="outline" className="px-16 h-18 text-lg font-black tracking-widest uppercase rounded-2xl border-zinc-800 hover:border-emerald-500/50" onClick={() => setView('dashboard')}>Command Center</Button>
-        </div>
-      )}
-
-      {/* Global Loading Overlay */}
       {loading.isActive && (
-        <div className="fixed inset-0 z-[1200] bg-black/98 backdrop-blur-3xl flex flex-col items-center justify-center animate-fade-in p-10">
+        <div className="fixed inset-0 z-[1200] bg-black/99 backdrop-blur-[100px] flex flex-col items-center justify-center animate-fade-in p-12">
            {!loading.error ? (
-             <>
-               <div className="relative w-36 h-36 mb-16">
-                  <div className="absolute inset-0 border-[10px] border-emerald-500/10 rounded-full"></div>
-                  <div className="absolute inset-0 border-[10px] border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-                  <div className="absolute inset-0 flex items-center justify-center text-emerald-500"><Zap size={56} className="animate-pulse" /></div>
-               </div>
-               <p className="text-emerald-400 font-black tracking-[0.8em] uppercase animate-pulse text-2xl text-center">{loading.message}</p>
-             </>
+             <NeuralSyncLoader messages={syncStages} />
            ) : (
-             <div className="max-w-md w-full glass-panel p-12 rounded-[4rem] text-center border-red-500/20 shadow-[0_0_80px_rgba(239,68,68,0.1)]">
-                <div className="w-24 h-24 bg-red-500/10 text-red-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 shadow-xl"><AlertCircle size={48} /></div>
-                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-6">Sync Error</h3>
-                <p className="text-zinc-500 mb-12 leading-relaxed font-medium text-lg">{loading.error}</p>
-                <Button size="lg" className="w-full h-16 bg-red-600 hover:bg-red-500 rounded-2xl font-black uppercase tracking-widest" onClick={() => userProfile && handleOnboardingComplete(userProfile)} icon={<RefreshCw size={24}/>}>Retry Sync</Button>
-                <button onClick={() => setLoading({ isActive: false, message: '', error: null })} className="mt-8 text-zinc-500 font-bold hover:text-white transition-colors text-sm uppercase tracking-[0.3em]">Cancel</button>
+             <div className="max-w-2xl w-full glass-panel p-20 rounded-[6rem] text-center border-red-500/20 shadow-[0_0_150px_rgba(239,68,68,0.15)]">
+                <div className="w-32 h-32 bg-red-500/10 text-red-500 rounded-[3.5rem] flex items-center justify-center mx-auto mb-16 shadow-2xl border border-red-500/20"><AlertCircle size={72} /></div>
+                <h3 className="text-4xl font-black text-white uppercase tracking-tighter mb-10 leading-none">Sync Interrupted</h3>
+                <p className="text-zinc-600 mb-16 leading-relaxed font-bold text-2xl">{loading.error}</p>
+                <div className="flex flex-col gap-6">
+                   <Button size="lg" className="w-full h-24 bg-red-600 hover:bg-red-500 rounded-[2.5rem] font-black uppercase tracking-[0.4em] text-white shadow-2xl shadow-red-950/40 text-xl" onClick={() => userProfile && handleOnboardingComplete(userProfile)} icon={<RefreshCw size={36}/>}>Retry Sync</Button>
+                </div>
              </div>
            )}
         </div>
