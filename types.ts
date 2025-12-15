@@ -38,7 +38,25 @@ export interface ChatMessage {
   timestamp: number;
 }
 
-export type AppView = 'dashboard' | 'pathway' | 'skills' | 'coach' | 'market';
+export interface UserProfile {
+  name: string;
+  email: string;
+  currentRole: string;
+  education: string;
+  yearsOfExp: string;
+  industry: string;
+  goal: string;
+  experienceLevel: 'entry' | 'mid' | 'senior';
+  timeAvailability: string; // hours per week
+  learningStyle: string;
+  skillsAssessment: Record<string, number>;
+}
+
+export type AppView = 
+  | 'landing' | 'pricing' | 'about' | 'auth' 
+  | 'onboarding' | 'dashboard' | 'pathway' 
+  | 'skills' | 'coach' | 'market' | 'portfolio' 
+  | 'matching' | 'settings';
 
 export interface LoadingState {
   isActive: boolean;

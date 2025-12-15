@@ -1,7 +1,5 @@
 {
   "name": "SkillSync AI",
   "description": "AI-powered career alignment and personalized learning pathways.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": []
 }
